@@ -32,7 +32,9 @@ export default {
   ): Promise<Response> {
     const ip = request.headers.get("CF-Connecting-IP")
 
-    const { endpoint, jsonrpc, id, method, params } = await request.json() as any
+    let { endpoint, jsonrpc, id, method, params } = await request.json() as any
+
+    if (!endpoint) endpoint = "https://cloudflare-eth.com"
 
     await createClient(env.SUPABASE_URL, env.SUPABASE_KEY)
       .from("requests")
