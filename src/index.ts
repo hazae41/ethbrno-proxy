@@ -30,8 +30,14 @@ export default {
   ): Promise<Response> {
     const ip = request.headers.get("CF-Connecting-IP")
 
+    const { endpoint, jsonrpc, id, method, params } = await request.json() as any
+
     // createClient(env.SUPABASE_URL, env.SUPABASE_KEY)
 
-    return new Response("Hello World!");
+    const body = JSON.stringify({ jsonrpc, id, method, params })
+    const headers = new Headers({ "Content-Type": "application/json" })
+    const res = await fetch(endpoint, { method: "POST", body, headers })
+
+    return new Response(res.body)
   },
 };
