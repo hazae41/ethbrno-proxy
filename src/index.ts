@@ -8,6 +8,8 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+import { createClient } from "@supabase/supabase-js";
+
 export interface Env {
   // Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
   // MY_KV_NAMESPACE: KVNamespace;
@@ -32,7 +34,9 @@ export default {
 
     const { endpoint, jsonrpc, id, method, params } = await request.json() as any
 
-    // createClient(env.SUPABASE_URL, env.SUPABASE_KEY)
+    await createClient(env.SUPABASE_URL, env.SUPABASE_KEY)
+      .from("requests")
+      .insert({ ip, method, endpoint })
 
     const body = JSON.stringify({ jsonrpc, id, method, params })
     const headers = new Headers({ "Content-Type": "application/json" })
